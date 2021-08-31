@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
           Center(
             child: Text(
               "This is Body Of Our App",
-              style: TextStyle(color: Colors.white),
+              // style: TextStyle(color: Colors.white),
             ),
           )
         ],

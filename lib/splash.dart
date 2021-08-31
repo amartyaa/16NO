@@ -18,9 +18,10 @@ class _SplashState extends State<Splash> {
 
   _navigatetoLogin() async {
     await Future.delayed(const Duration(seconds: 1));
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (BuildContext context) => const Login()));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()));
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,11 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_import
 
 import 'package:build_out_loud/home.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'newuser.dart';
 
 int otp = 0;
 
@@ -31,6 +32,18 @@ class Otp extends StatelessWidget {
 
       //working area
       child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            leading: Builder(builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            }),
+          ),
           // resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           body: Center(
@@ -110,7 +123,7 @@ class Otp extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 300,
+                    height: 200,
                   ),
 
                   //Continue Button
@@ -123,7 +136,7 @@ class Otp extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (context) => const Home()));
+                                  builder: (context) => const NewUser()));
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,

@@ -19,10 +19,19 @@ var borderData = const BorderSide(
 
 class _LoginState extends State<Login> {
   _Nav2otp() {
-    Navigator.pushReplacement(
+    Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Otp()));
   }
-
+  
+  final myController1 = TextEditingController();
+  final myController2 = TextEditingController();
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController1.dispose();
+    myController2.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -99,6 +108,7 @@ class _LoginState extends State<Login> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.15,
                       child: TextFormField(
+                        // controller: myController1,
                         keyboardType: TextInputType.number,
                         initialValue: '+91',
                         style: const TextStyle(color: Colors.white),
@@ -117,6 +127,7 @@ class _LoginState extends State<Login> {
                     ),
                     Flexible(
                       child: TextField(
+                        controller: myController2,
                         keyboardType: TextInputType.number,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
