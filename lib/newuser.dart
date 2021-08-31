@@ -11,7 +11,7 @@ class NewUser extends StatefulWidget {
 
 class _NewUserState extends State<NewUser> {
   nav2home() {
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const Loading()));
   }
 
