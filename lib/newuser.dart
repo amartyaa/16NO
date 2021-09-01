@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'loading.dart';
+import 'credapi.dart';
 
 class NewUser extends StatefulWidget {
   const NewUser({Key? key}) : super(key: key);
@@ -9,15 +10,34 @@ class NewUser extends StatefulWidget {
 }
 
 class _NewUserState extends State<NewUser> {
-  nav2home() {
+  String email = "";
+  String firstname = "";
+  String lastname = "";
+  nav2home(String token) {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Loading()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => const Loading(),
+            settings: RouteSettings(arguments: token)));
   }
 
+  createuser(String fn, String ln, String em, String token) async {
+    print("creating user");
+    print(fn);
+    print(token);
+    nav2home(token);
+    var response = await CredAPI.createUser(token, fn, ln, em);
+    print(response);
+  }
 
   @override
   Widget build(BuildContext context) {
-    
+    TextEditingController _firstname = TextEditingController();
+    TextEditingController _lastname = TextEditingController();
+    TextEditingController _email = TextEditingController();
+    final String usertoken =
+        ModalRoute.of(context)!.settings.arguments as String;
+
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -85,6 +105,7 @@ class _NewUserState extends State<NewUser> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: _firstname,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                               focusedBorder: UnderlineInputBorder(
@@ -99,6 +120,7 @@ class _NewUserState extends State<NewUser> {
                         ),
                         const SizedBox(height: 10.0),
                         TextFormField(
+                          controller: _lastname,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                               focusedBorder: UnderlineInputBorder(
@@ -113,6 +135,7 @@ class _NewUserState extends State<NewUser> {
                         ),
                         const SizedBox(height: 10.0),
                         TextFormField(
+                          controller: _email,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                               focusedBorder: UnderlineInputBorder(
@@ -137,7 +160,10 @@ class _NewUserState extends State<NewUser> {
                           child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                   side: const BorderSide(color: Colors.white)),
-                              onPressed: nav2home,
+                              onPressed: () {
+                                createuser(_firstname.text, _lastname.text,
+                                    _email.text, usertoken);
+                              },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: const <Widget>[

@@ -122,7 +122,7 @@ class Otp extends StatelessWidget {
                       otpFieldStyle:
                           OtpFieldStyle(enabledBorderColor: Colors.white),
                       onChanged: (value) {
-                        print(value);
+                        // print(value);
                       },
                       onCompleted: (value) {
                         print(value);
@@ -144,16 +144,17 @@ class Otp extends StatelessWidget {
                         onPressed: () async {
                           var op = await _validate(usertoken, otp);
                           var flag = op['existing_user'];
-                          var token = op['access_token'];
+                          var actoken = op['access_token'];
                           if (flag == false) {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => const NewUser()));
+                                    builder: (context) => const NewUser(),
+                                    settings: RouteSettings(arguments: actoken)));
                           } else {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) => const Loading(),
-                                    settings: RouteSettings(arguments: token)));
+                                    settings: RouteSettings(arguments: actoken)));
                           }
                         },
                         child: Row(

@@ -1,8 +1,5 @@
 // ignore_for_file: file_names, avoid_print
-
-import 'dart:collection';
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
@@ -39,8 +36,7 @@ class CredAPI {
     }
   }
 
-  static Future<dynamic> verifyOTP(
-      String token, String otp) async {
+  static Future<dynamic> verifyOTP(String token, String otp) async {
     final response = await http.post(
       Uri.parse('https://credaccess.web.app/auth/verifyOtp'),
       headers: <String, String>{
@@ -52,5 +48,36 @@ class CredAPI {
     // var c = jsonDecode(response.body);
     // var a = {jsonDecode(response.body)['access_token'],jsonDecode(response.body)['existing_user']};
     return jsonDecode(response.body);
+  }
+
+  static Future<dynamic> createUser(String accesstoken, String firstname,
+      String lastname, String email) async {
+    print("partnerke:  " + partnerkey);
+    print("AccKey:  " + accesstoken);
+    final curesponse = await http.post(
+        Uri.parse('https://credaccess.web.app/profile'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'credaccess-secret-key': partnerkey,
+          'credaccess-access-token': accesstoken
+        },
+        body: jsonEncode(<String, String>{
+          'first_name': firstname,
+          'last_name': lastname,
+          'email': email
+        }));
+
+    return jsonEncode(curesponse.body);
+  }
+
+  static Future<dynamic> getUser(String accesstoken) async {
+    final guresponse = await http.get(
+        Uri.parse('https://credaccess.web.app/profile'),
+        headers: <String, String>{
+          'credaccess-access-token': accesstoken,
+          'credaccess-secret-key': partnerkey
+        });
+
+    return jsonDecode(guresponse.body);
   }
 }

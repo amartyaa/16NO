@@ -1,20 +1,37 @@
+import 'package:build_out_loud/credapi.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  String usertoken;
+
+  Home({Key? key, required this.usertoken}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  
   int _index = 0;
+
+  Future<dynamic> getuserData(String usertoken) async {
+    var userdetails = await CredAPI.getUser(usertoken);
+    return userdetails;
+  }
+
+  // printf(String usertoken) async {
+  //   // print(await getuserData(usertoken));
+  // }
+
   @override
   Widget build(BuildContext context) {
+    //Retrieve the user token from the previous screen
     final String usertoken =
         ModalRoute.of(context)!.settings.arguments as String;
+    print(usertoken);
+    var user = getuserData(usertoken);
+    //Retrieve the user details from API
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(
@@ -114,6 +131,8 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
+
+            // CARDS for tasks
             SizedBox(
               height: 200, // card height
               child: PageView.builder(
@@ -145,6 +164,19 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
+            //spacer
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  print(user);
+                },
+                child: const Text('Sign Out')),
+            // Text(
+            //   getuserData(usertoken),
+            //   style: const TextStyle(fontSize: 24),
+            // )
           ],
         ),
       ),
