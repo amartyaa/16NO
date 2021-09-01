@@ -1,8 +1,9 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'otp.dart';
+import 'credapi.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -18,20 +19,28 @@ var borderData = const BorderSide(
 );
 
 class _LoginState extends State<Login> {
-  _Nav2otp() {
+  _Nav2otp(String phone) async {
+    print(phone);
+    var Usertoken = await CredAPI.getOTP(phone);
+    print(Usertoken);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Otp()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => const Otp(),
+            settings: RouteSettings(arguments: Usertoken)));
   }
-  
-  final myController1 = TextEditingController();
+
+  // final myController1 = TextEditingController();
   final myController2 = TextEditingController();
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    myController1.dispose();
+    // myController1.dispose();
     myController2.dispose();
     super.dispose();
   }
+
+  String Phone = "";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -154,9 +163,14 @@ class _LoginState extends State<Login> {
                     child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.white)),
-                        onPressed: _Nav2otp,
+                        onPressed: () {
+                          setState(() {
+                            Phone = myController2.text;
+                            _Nav2otp(Phone);
+                          });
+                        },
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                          // mainAxisSize: MainAxisSize.min,
                           children: const <Widget>[
                             Text(
                               'Continue',
@@ -164,7 +178,7 @@ class _LoginState extends State<Login> {
                                   TextStyle(fontSize: 20, color: Colors.white),
                             ),
                             Icon(Icons.arrow_forward_ios_outlined,
-                                color: Colors.white)
+                                size: 16, color: Colors.white)
                           ],
                         )),
                   ))

@@ -1,21 +1,29 @@
-// ignore_for_file: avoid_print, unused_import
+// ignore_for_file: avoid_print
 
-import 'package:build_out_loud/home.dart';
+import 'package:build_out_loud/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'newuser.dart';
+import 'credapi.dart';
 
-int otp = 0;
+String otp = "";
+
+String usertoken = "";
 
 class Otp extends StatelessWidget {
   const Otp({Key? key}) : super(key: key);
-  _validate(int otp) {
-    //OTP validation logic
+  Future<dynamic> _validate(String usertoken, String otp) async {
+    var status = await CredAPI.verifyOTP(usertoken, otp);
+    // print(status['existing_user']);
+    return status;
   }
+
   @override
   Widget build(BuildContext context) {
+    final String usertoken =
+        ModalRoute.of(context)!.settings.arguments as String;
     return
         //background gradient container
         Container(
@@ -40,7 +48,7 @@ class Otp extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                // tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               );
             }),
           ),
@@ -118,7 +126,7 @@ class Otp extends StatelessWidget {
                       },
                       onCompleted: (value) {
                         print(value);
-                        otp = value as int;
+                        otp = value;
                       },
                     ),
                   ),
@@ -133,10 +141,20 @@ class Otp extends StatelessWidget {
                     child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.white)),
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const NewUser()));
+                        onPressed: () async {
+                          var op = await _validate(usertoken, otp);
+                          var flag = op['existing_user'];
+                          var token = op['access_token'];
+                          if (flag == false) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const NewUser()));
+                          } else {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const Loading(),
+                                    settings: RouteSettings(arguments: token)));
+                          }
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -147,7 +165,7 @@ class Otp extends StatelessWidget {
                                   TextStyle(fontSize: 20, color: Colors.white),
                             ),
                             Icon(Icons.arrow_forward_ios_outlined,
-                                color: Colors.white)
+                                size: 16, color: Colors.white)
                           ],
                         )),
                   ))

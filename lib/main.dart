@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     precacheImage(const AssetImage('Assets/img/Icon.png'), context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

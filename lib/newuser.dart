@@ -1,4 +1,3 @@
-import 'package:build_out_loud/home.dart';
 import 'package:flutter/material.dart';
 import 'loading.dart';
 
@@ -15,8 +14,10 @@ class _NewUserState extends State<NewUser> {
         context, MaterialPageRoute(builder: (context) => const Loading()));
   }
 
+
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(

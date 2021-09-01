@@ -9,10 +9,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  
   int _index = 0;
   @override
   Widget build(BuildContext context) {
+    final String usertoken =
+        ModalRoute.of(context)!.settings.arguments as String;
     return Container(
+      margin: const EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               colors: [
@@ -24,10 +28,20 @@ class _HomeState extends State<Home> {
               end: Alignment.bottomRight,
               tileMode: TileMode.clamp)),
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: const Icon(Icons.arrow_back_ios),
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: Colors.transparent,
+        //   leading: Builder(
+        //     builder: (BuildContext context) {
+        //       return IconButton(
+        //         icon: const Icon(Icons.arrow_back_ios),
+        //         onPressed: () {
+        //           Navigator.pop(context);
+        //         },
+        //         tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+        //       );
+        //     },
+        //   ),
+        // ),
         body: Column(
           children: [
             Padding(
