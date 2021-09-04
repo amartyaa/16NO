@@ -1,114 +1,83 @@
-import 'dart:async';
+// ignore_for_file: file_names, avoid_print
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
-Future<Album> createAlbum(String title) async {
-  final response = await http.post(
-    Uri.parse('https://jsonplaceholder.typicode.com/albums'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'title': title,
-    }),
-  );
+class CredAPI {
+  static const String partnerkey = "553491c57ccaf4c737bba2b9be909a20";
+  late final String phone;
 
-  if (response.statusCode == 201) {
-    // If the server did return a 201 CREATED response,
-    // then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a 201 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create album.');
-  }
-}
+  //Constructor
+  CredAPI({required this.phone});
 
-class Album {
-  final int id;
-  final String title;
-
-  Album({required this.id, required this.title});
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      id: json['id'],
-      title: json['title'],
-    );
-  }
-}
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  _MyAppState createState() {
-    return _MyAppState();
-  }
-}
-
-class _MyAppState extends State<MyApp> {
-  final TextEditingController _controller = TextEditingController();
-  Future<Album>? _futureAlbum;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Create Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Create Data Example'),
-        ),
-        body: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(8.0),
-          child: (_futureAlbum == null) ? buildColumn() : buildFutureBuilder(),
-        ),
-      ),
-    );
+  //Functions in CREDAPI
+  //bakwas function
+  Future<CredAPI> getCred(String id) async {
+    return CredAPI(phone: '');
   }
 
-  Column buildColumn() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: _controller,
-          decoration: const InputDecoration(hintText: 'Enter Title'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _futureAlbum = createAlbum(_controller.text);
-            });
-          },
-          child: const Text('Create Data'),
-        ),
-      ],
-    );
-  }
-
-  FutureBuilder<Album> buildFutureBuilder() {
-    return FutureBuilder<Album>(
-      future: _futureAlbum,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data!.title);
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-
-        return const CircularProgressIndicator();
+  static Future<String> getOTP(String phone) async {
+    final response = await http.post(
+      Uri.parse('https://credaccess.web.app/auth/generateOtp'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'credaccess-secret-key': partnerkey
       },
+      body: jsonEncode(<String, String>{
+        'phone': phone,
+      }),
     );
+
+    if (response.statusCode == 200) {
+      //encodes the JSONstring response into map and returns value of key token
+      return jsonDecode(response.body)['token'];
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  static Future<dynamic> verifyOTP(String token, String otp) async {
+    final response = await http.post(
+      Uri.parse('https://credaccess.web.app/auth/verifyOtp'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'credaccess-secret-key': partnerkey
+      },
+      body: jsonEncode(<String, String>{'token': token, 'otp': otp}),
+    );
+    // var c = jsonDecode(response.body);
+    // var a = {jsonDecode(response.body)['access_token'],jsonDecode(response.body)['existing_user']};
+    return jsonDecode(response.body);
+  }
+
+  static Future<dynamic> createUser(String accesstoken, String firstname,
+      String lastname, String email) async {
+    print("partnerke:  " + partnerkey);
+    print("AccKey:  " + accesstoken);
+    final curesponse = await http.post(
+        Uri.parse(' https://backend-16no.herokuapp.com/storeUserDetails'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'credaccess-secret-key': partnerkey,
+          'credaccess-access-token': accesstoken
+        },
+        body: jsonEncode(<String, String>{
+          'first_name': firstname,
+          'last_name': lastname,
+          'email': email
+        }));
+
+    return jsonEncode(curesponse.body);
+  }
+
+  static Future<dynamic> getUser(String accesstoken) async {
+    final guresponse = await http.get(
+        Uri.parse(' https://backend-16no.herokuapp.com/getUserDetails'),
+        headers: <String, String>{
+          'credaccess-access-token': accesstoken,
+          'credaccess-secret-key': partnerkey
+        });
+
+    return jsonDecode(guresponse.body);
   }
 }

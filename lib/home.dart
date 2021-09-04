@@ -14,10 +14,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _index = 0;
 
-  Future<dynamic> getuserData(String usertoken) async {
-    var userdetails = await CredAPI.getUser(usertoken);
-    return userdetails;
-  }
+  // Future<dynamic> getuserData(String usertoken) async {
+  //   var userdetails = await CredAPI.getUser(usertoken);
+  //   return userdetails;
+  // }
 
   // printf(String usertoken) async {
   //   // print(await getuserData(usertoken));
@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
     final String usertoken =
         ModalRoute.of(context)!.settings.arguments as String;
     print(usertoken);
-    var user = getuserData(usertoken);
+    // var user = getuserData(usertoken);
     //Retrieve the user details from API
 
     return Container(
@@ -170,7 +170,7 @@ class _HomeState extends State<Home> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  print(user);
+                  // print(user);
                 },
                 child: const Text('Sign Out')),
             // Text(

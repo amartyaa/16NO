@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class CredAPI {
-  static const String partnerkey = "e701dc4118e27cbca8f636f22a362397";
+  static const String partnerkey = "553491c57ccaf4c737bba2b9be909a20";
   late final String phone;
 
   //Constructor
@@ -54,25 +54,31 @@ class CredAPI {
       String lastname, String email) async {
     print("partnerke:  " + partnerkey);
     print("AccKey:  " + accesstoken);
-    final curesponse = await http.post(
-        Uri.parse('https://credaccess.web.app/profile'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'credaccess-secret-key': partnerkey,
-          'credaccess-access-token': accesstoken
-        },
-        body: jsonEncode(<String, String>{
-          'first_name': firstname,
-          'last_name': lastname,
-          'email': email
-        }));
+    final curesponse = await http.get(
+      Uri.parse('https://backend-16no.herokuapp.com/storeUserDetails?token=' +
+          accesstoken +
+          '&phone=88888885647&' +
+          '&fn=' +
+          firstname +
+          '&ln=' +
+          lastname +
+          '&email=' +
+          email),
+      // headers: <String, String>{
+      //   'credaccess-access-token': accesstoken,
+      //   'phone': '8989898989',
+      //   'fn': firstname,
+      //   'ln': lastname,
+      //   'email': email
+      // }
+    );
 
     return jsonEncode(curesponse.body);
   }
 
   static Future<dynamic> getUser(String accesstoken) async {
     final guresponse = await http.get(
-        Uri.parse('https://credaccess.web.app/profile'),
+        Uri.parse('https://backend-16no.herokuapp.com/getUserDetails'),
         headers: <String, String>{
           'credaccess-access-token': accesstoken,
           'credaccess-secret-key': partnerkey
